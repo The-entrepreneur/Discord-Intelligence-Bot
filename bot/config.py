@@ -1,9 +1,28 @@
 import os
 from dotenv import load_dotenv
 
+# Load .env only if it exists (safe for Render)
 load_dotenv()
 
-DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-CENTRAL_GUILD_ID = int(os.getenv("CENTRAL_GUILD_ID", 0)) if os.getenv("CENTRAL_GUILD_ID") else None
-JOINS_CHANNEL_ID = int(os.getenv("JOINS_CHANNEL_ID", 0)) if os.getenv("JOINS_CHANNEL_ID") else None
-SYSTEM_LOGS_CHANNEL_ID = int(os.getenv("SYSTEM_LOGS_CHANNEL_ID", 0)) if os.getenv("SYSTEM_LOGS_CHANNEL_ID") else None
+
+def get_env(name: str, cast=str, required: bool = True):
+    value = os.getenv(name)
+
+    if value is None:
+        if required:
+            raise RuntimeError(f"Missing required environment variable: {name}")
+        return None
+
+    try:
+        return cast(value)
+    except Exception:
+        raise RuntimeError(f"Invalid value for environment variable: {name}")
+
+
+# Discord
+DISCORD_TOKEN = get_env("DISCORD_TOKEN")
+
+# Guild / Channels
+CENTRAL_GUILD_ID = get_env("CENTRAL_GUILD_ID", int)
+JOINS_CHANNEL_ID = get_env("JOINS_CHANNEL_ID", int)
+SYSTEM_LOGS_CHANNEL_ID = get_env("SYSTEM_LOGS_CHANNEL_ID", int)

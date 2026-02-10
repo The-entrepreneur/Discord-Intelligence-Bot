@@ -80,11 +80,16 @@ class EventHandlers:
             f"User: {member} ({member.id})"
         )
 
+        if member.discriminator == "0":
+            user_display = member.name
+        else:
+            user_display = f"{member.name}#{member.discriminator}"
+
         await self.send_join_log(
             f"👤 **Member Joined**\n"
             f"Server: {member.guild.name}\n"
             f"Server ID: `{member.guild.id}`\n"
-            f"User: {member.name}#{member.discriminator}\n"
+            f"User: {user_display}\n"
             f"User ID: `{member.id}`\n"
             f"Time: {now()}"
         )
